@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин одежды</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .product {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .product:last-child {
+            border-bottom: none;
+        }
+        input {
+            padding: 8px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать в магазин!</h1>
+
+        <div id="userSection" class="hidden">
+            <p id="userName"></p>
+            <button class="btn btn-danger" onclick="logout()">Выход</button>
+        </div>
+
+        <div id="authButtons">
+            <button class="btn btn-primary" onclick="window.location.href='login.html'">Вход</button>
+            <button class="btn btn-primary" onclick="window.location.href='register.html'">Регистрация</button>
+        </div>
+
+        <button id="adminPanelButton" class="btn btn-primary" onclick="window.location.href='admin.html'">Админ-панель</button>
+
+        <h2>Товары:</h2>
+        <div id="productList">
+            <p>Загрузка товаров...</p>
+        </div>
+
+        <h2>Оформить заказ</h2>
+        <form id="orderForm">
+            <input type="text" id="productId" placeholder="ID товара" required>
+            <input type="number" id="quantity" placeholder="Количество" required>
+            <button class="btn btn-primary" type="submit">Заказать</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+            const userName = localStorage.getItem("userName");
+
+            if (token && userName) {
+                document.getElementById("userSection").classList.remove("hidden");
+                document.getElementById("userName").innerText = `Привет, ${userName}!`;
+                document.getElementById("authButtons").style.display = "none";
+            }
+        });
+
+        async function loadProducts() {
+            try {
+                console.log("Загрузка товаров...");
+                const response = await fetch("http://localhost:5000/api/products");
+
+                if (!response.ok) throw new Error(`Ошибка загрузки: ${response.statusText}`);
+
+                const products = await response.json();
+                console.log("Полученные товары:", products);
+
+                const productList = document.getElementById("productList");
+                if (!productList) {
+                    console.error("Элемент #productList не найден!");
+                    return;
+                }
+
+                productList.innerHTML = ""; // Очистка перед обновлением
+
+                if (products.length === 0) {
+                    productList.innerHTML = "<p>Нет товаров</p>";
+                } else {
+                    products.forEach(product => {
+                        const div = document.createElement("div");
+                        div.classList.add("product");
+                        div.innerHTML = `
+                            <h3>${product.name}</h3>
+                            <p><strong>Описание:</strong> ${product.description}</p>
+                            <p><strong>Цена:</strong> ${product.price} ₸</p>
+                            <p><strong>В наличии:</strong> ${product.stock}</p>
+                        `;
+                        productList.appendChild(div);
+                    });
+                }
+
+            } catch (error) {
+                console.error("Ошибка загрузки товаров:", error);
+                document.getElementById("productList").innerHTML = "<p>Ошибка загрузки товаров!</p>";
+            }
+        }
+
+        loadProducts(); // Загружаем товары при загрузке страницы
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userName");
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
