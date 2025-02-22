@@ -115,7 +115,7 @@
                     return;
                 }
 
-                productList.innerHTML = ""; // Очистка перед обновлением
+                productList.innerHTML = ""; 
 
                 if (products.length === 0) {
                     productList.innerHTML = "<p>Нет товаров</p>";
@@ -139,7 +139,7 @@
             }
         }
 
-        loadProducts(); // Загружаем товары при загрузке страницы
+        loadProducts(); 
 
         function logout() {
             localStorage.removeItem("token");

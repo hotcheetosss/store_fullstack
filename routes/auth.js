@@ -4,7 +4,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// Регистрация пользователя
+
 router.post("/register", async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
@@ -16,10 +16,10 @@ router.post("/register", async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Проверяем, первый ли это пользователь
+        
         const isFirstUser = (await User.countDocuments()) === 0;
         
-        // Если в запросе передана роль "admin", проверяем, есть ли право её выдать
+        
         const assignedRole = isFirstUser ? "admin" : role === "admin" ? "admin" : "user";
 
         const user = new User({
@@ -46,7 +46,7 @@ router.post("/register", async (req, res) => {
 
 
 
-// Авторизация пользователя
+
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;

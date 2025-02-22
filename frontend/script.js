@@ -17,7 +17,7 @@ async function loadProducts() {
             return;
         }
 
-        productList.innerHTML = ""; // Очистка перед обновлением
+        productList.innerHTML = ""; 
 
         if (products.length === 0) {
             productList.innerHTML = "<p>Нет товаров</p>";
@@ -40,7 +40,7 @@ async function loadProducts() {
     }
 }
 
-// Вызываем функцию при загрузке страницы
+
 document.addEventListener("DOMContentLoaded", () => {
     loadProducts();
 });
@@ -49,9 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 document.getElementById("searchProductForm")?.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Останавливаем перезагрузку страницы
+    e.preventDefault(); 
 
-    const productId = document.getElementById("searchProductId").value.trim(); // Получаем ID товара
+    const productId = document.getElementById("searchProductId").value.trim(); 
 
     if (!productId) {
         alert("Введите ID товара!");
@@ -66,30 +66,30 @@ document.getElementById("searchProductForm")?.addEventListener("submit", async (
         }
 
         const product = await response.json();
-        console.log("Полученный товар:", product); // ✅ Проверяем, что сервер ответил
+        console.log("Полученный товар:", product); 
 
-        // Выводим данные о товаре
+        
         document.getElementById("productName").textContent = product.name;
         document.getElementById("productDescription").textContent = product.description;
         document.getElementById("productPrice").textContent = `${product.price} ₸`;
         document.getElementById("productStock").textContent = product.stock;
 
-        // Заполняем ID товара для оформления заказа
+       
         document.getElementById("orderProductId").value = product._id;
 
         console.log("Данные о товаре загружены, показываем блок");
 
-        // ✅ Делаем блок с информацией о товаре видимым
+        
         document.getElementById("productInfo").style.display = "block";
 
-        // ✅ Показываем форму заказа
+      
         document.getElementById("orderForm").style.display = "block";
 
     } catch (error) {
         alert(error.message);
-        console.log("Ошибка:", error); // ✅ Логируем ошибку в консоли
+        console.log("Ошибка:", error);
 
-        // ❌ Скрываем блок с товаром, если товар не найден
+     
         document.getElementById("productInfo").style.display = "none";
         document.getElementById("orderForm").style.display = "none";
     }
@@ -97,7 +97,7 @@ document.getElementById("searchProductForm")?.addEventListener("submit", async (
 
 
 
-// Авторизация пользователя
+
 
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -115,17 +115,16 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userName", data.user.name);
-        localStorage.setItem("userRole", data.user.role); // Сохраняем роль
+        localStorage.setItem("userRole", data.user.role);
 
-        console.log("Роль пользователя:", data.user.role); // Проверяем, какая роль приходит
+        console.log("Роль пользователя:", data.user.role); 
 
-        window.location.href = "index.html"; // Перенаправление на главную
+        window.location.href = "index.html"; 
     } else {
         alert("Ошибка входа: " + data.message);
     }
 });
 
-// Отображение имени пользователя и админ-панели
 
 document.addEventListener("DOMContentLoaded", () => {
     const userName = localStorage.getItem("userName");
@@ -144,16 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (logoutButton) logoutButton.style.display = "block";
 });
 
-// Выход пользователя
+
 
 document.getElementById("logoutButton")?.addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
     localStorage.removeItem("userRole");
-    window.location.reload(); // Перезагружаем страницу
+    window.location.reload(); 
 });
 
-// Регистрация пользователя
+
 
 document.getElementById("registerForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -174,13 +173,13 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
         localStorage.setItem("token", data.token);
         localStorage.setItem("userName", name);
         localStorage.setItem("userRole", data.user.role);
-        window.location.href = "index.html"; // Перенаправление на главную страницу
+        window.location.href = "index.html"; 
     } else {
         alert("Ошибка регистрации: " + data.message);
     }
 });
 
-// Функция для редактирования товара
+
 function editProduct(id, name, description, price, category, stock, images) {
     document.getElementById("editProductId").value = id;
     document.getElementById("editProductName").value = name;
@@ -221,8 +220,8 @@ document.getElementById("addProductForm")?.addEventListener("submit", async (e) 
         if (!response.ok) throw new Error(`Ошибка добавления товара: ${response.statusText}`);
 
         alert("Товар успешно добавлен!");
-        document.getElementById("addProductForm").reset(); // Очистка формы после успешного добавления
-        loadProductsForAdmin(); // Обновление списка товаров
+        document.getElementById("addProductForm").reset(); 
+        loadProductsForAdmin();
     } catch (error) {
         console.error(error);
         alert("Ошибка при добавлении товара.");
@@ -232,7 +231,7 @@ document.getElementById("addProductForm")?.addEventListener("submit", async (e) 
 
 
 
-// Функция загрузки заказов пользователя
+
 async function loadProductsForAdmin() {
     try {
         const response = await fetch(`${API_URL}/products`, {
@@ -245,7 +244,7 @@ async function loadProductsForAdmin() {
         const productList = document.getElementById("productList");
         if (!productList) return console.error("productList не найден!");
 
-        productList.innerHTML = ""; // Очистка списка перед обновлением
+        productList.innerHTML = ""; 
 
         products.forEach(product => {
             const div = document.createElement("div");
@@ -332,8 +331,6 @@ async function deleteProduct(id) {
 }
 
 
-
-// ✅ Загружаем товары, если открыта админ-панель
 if (document.getElementById("productList")) {
     loadProductsForAdmin();
 }

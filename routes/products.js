@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
-const { protect } = require('../middleware/authMiddleware'); // Импорт защиты
+const { protect } = require('../middleware/authMiddleware'); 
 
-// Получить все товары (доступно всем)
+
 router.get('/', async (req, res) => {
     try {
         const products = await Product.find();
@@ -35,7 +35,7 @@ router.delete('/:id', protect, async (req, res) => {
     }
 });
 
-// Создать новый товар (только для авторизованных пользователей)
+
 router.post('/', protect, async (req, res) => { 
     try {
         const { name, description, price, category, stock, images } = req.body;

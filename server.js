@@ -24,7 +24,7 @@ app.use('/api/orders', orderRoutes);
 app.use("/api/products", require("./routes/products"));
 
 
-// Проверка работы сервера
+
 app.get('/', (req, res) => {
     res.send('✅ API работает!');
 });

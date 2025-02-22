@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
-const { protect } = require('../middleware/authMiddleware'); // Импорт защиты
+const { protect } = require('../middleware/authMiddleware'); 
 
-// Получить все заказы (только для авторизованных пользователей)
+
 router.get('/', protect, async (req, res) => {
     try {
         const orders = await Order.find().populate('user').populate('products.product');
@@ -13,7 +13,7 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// Создать новый заказ (только для авторизованных пользователей)
+
 router.post("/", protect, async (req, res) => {
     try {
         const { productId, quantity } = req.body;
